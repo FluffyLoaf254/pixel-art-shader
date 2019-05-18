@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>WebGL Demo</title>
+</head>
+<body>
+    <canvas id="webgl-canvas" width="1000" height="1000" style="border: 5px solid black;"></canvas>
+    <div style="width: 960px; border: 5px solid black; margin-top: 20px; padding: 20px; display: flex; flex-wrap: wrap; justify-content: space-around;">
+        <label>Rotation Speed:
+            <input id="rotate-speed" type="range" min="0" max="4" value="1">
+        </label>
+        <label>Light Direction X:
+            <input id="light-direction-x" type="range" min="-5" max="5" value="1">
+        </label>
+        <label>Light Direction Y:
+            <input id="light-direction-y" type="range" min="-5" max="5" value="-1">
+        </label>
+        <label>Smoothing Factor:
+            <input id="smooth-factor" type="range" min="0.0" max="1.0" step="0.05" value="0.85">
+        </label>
+        <label>Fixed Lighting:
+            <input id="fixed-light" type="checkbox">
+        </label>
+    </div>
+    <script src="build/app.js"></script>
+</body>
+</html>
