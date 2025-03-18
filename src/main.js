@@ -9,7 +9,7 @@ import { mat4 } from 'gl-matrix';
 import { Mesh } from 'webgl-obj-loader';
 
 Promise.all([
-    fetch('/dragon.obj').then(function (response) {
+    fetch('dragon.obj').then(function (response) {
         return response.text();
     }),
     new Promise(function (resolve) {
@@ -17,7 +17,7 @@ Promise.all([
         image.onload = () => {
             resolve(image);
         };  
-        image.src = '/dragon.png';
+        image.src = 'dragon.png';
     })
 ]).then(main);
 
