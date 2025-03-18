@@ -1,20 +1,16 @@
 {
-    "watch": {
-        "build": "app.js"
-    },
-    "scripts": {
-        "build": "webpack",
-        "serve": "webpack-dev-server",
-        "watch": "npm-watch"
-    },
-    "devDependencies": {
-        "npm-watch": "^0.6.0",
-        "webpack": "^4.29.4",
-        "webpack-cli": "^3.1.1",
-        "webpack-dev-server": "^3.1.0"
-    },
-    "dependencies": {
-        "gl-matrix": "^3.0.0",
-        "webgl-obj-loader": "^2.0.3"
-    }
+  "name": "pixel-art-shader",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^6.2.0",
+    "gl-matrix": "^3.4.3",
+    "webgl-obj-loader": "^2.0.3"
+  }
 }

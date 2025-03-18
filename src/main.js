@@ -1,28 +1,23 @@
-glMatrix = require('gl-matrix');
-objLoader = require('webgl-obj-loader');
+import './style.css';
+
+import renderVertex from './shaders/render-vertex.glsl?raw';
+import renderFragment from './shaders/render-fragment.glsl?raw';
+import postVertex from './shaders/post-vertex.glsl?raw';
+import postFragment from './shaders/post-fragment.glsl?raw';
+
+import { mat4 } from 'gl-matrix';
+import { Mesh } from 'webgl-obj-loader';
 
 Promise.all([
-    fetch('vertex.glsl').then(function (response) {
-        return response.text();
-    }),
-    fetch('fragment.glsl').then(function (response) {
-        return response.text();
-    }),
-    fetch('post_vertex.glsl').then(function (response) {
-        return response.text();
-    }),
-    fetch('post_fragment.glsl').then(function (response) {
-        return response.text();
-    }),
-    fetch('dragon.obj').then(function (response) {
+    fetch('/dragon.obj').then(function (response) {
         return response.text();
     }),
     new Promise(function (resolve) {
         var image = new Image();
         image.onload = () => {
             resolve(image);
-        };
-        image.src = 'dragon_texture.png';
+        };  
+        image.src = '/dragon.png';
     })
 ]).then(main);
 
@@ -36,7 +31,7 @@ function main(files) {
     gl.enable(gl.CULL_FACE);
     gl.depthFunc(gl.LEQUAL);
 
-    const shaderProgram = initShaderProgram(gl, files[0], files[1]);
+    const shaderProgram = initShaderProgram(gl, renderVertex, renderFragment);
 
     const programInfo = {
         program: shaderProgram,
@@ -52,13 +47,13 @@ function main(files) {
             smoothFactor: gl.getUniformLocation(shaderProgram, 'uSmoothFactor'),
             fixedLighting: gl.getUniformLocation(shaderProgram, 'uFixedLighting'),
         },
-        mesh: new objLoader.Mesh(files[4]),
-        texture: files[5],
+        mesh: new Mesh(files[0]),
+        texture: files[1],
     }
 
     const buffers = initBuffers(gl, programInfo);
 
-    const postShaderProgram = initShaderProgram(gl, files[2], files[3]);
+    const postShaderProgram = initShaderProgram(gl, postVertex, postFragment);
 
     const postProgramInfo = {
         program: postShaderProgram,
@@ -230,20 +225,20 @@ function loadTextures(gl, programInfo) {
 }
 
 function drawScene(gl, programInfo, buffers, postProgramInfo, postBuffers, textures) {
-    const projectionMatrix = glMatrix.mat4.create();
+    const projectionMatrix = mat4.create();
 
     const fieldOfView = 45 * Math.PI / 180;
     const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
 
-    glMatrix.mat4.perspective(projectionMatrix, fieldOfView, aspect, 0.1, 10.0);
+    mat4.perspective(projectionMatrix, fieldOfView, aspect, 0.1, 10.0);
 
-    window.modelViewMatrix = glMatrix.mat4.create();
+    window.modelViewMatrix = mat4.create();
 
-    glMatrix.mat4.translate(window.modelViewMatrix, window.modelViewMatrix, [0.0, -1.0, -3.5]);
+    mat4.translate(window.modelViewMatrix, window.modelViewMatrix, [0.0, -1.0, -3.5]);
 
     window.then = 0;
 
-    drawFrame = (time) => {
+    const drawFrame = (time) => {
         // convert time to seconds
         time *= 0.001;
         const deltaTime = time - window.then;
@@ -262,7 +257,7 @@ function drawScene(gl, programInfo, buffers, postProgramInfo, postBuffers, textu
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
         const rotateSpeed = document.getElementById('rotate-speed').value;
-        glMatrix.mat4.rotate(window.modelViewMatrix, window.modelViewMatrix, rotateSpeed * deltaTime, [0.0, 1.0, 0.0]);
+        mat4.rotate(window.modelViewMatrix, window.modelViewMatrix, rotateSpeed * deltaTime, [0.0, 1.0, 0.0]);
 
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, textures.texture);
